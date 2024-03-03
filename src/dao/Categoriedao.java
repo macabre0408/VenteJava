@@ -31,7 +31,7 @@ public class Categoriedao {
     public static List<Categorie> ShowCat() throws SQLException{
         List<Categorie> cat = new ArrayList<>();
         Connection con = Connexion.Connect();
-        String query = "select * from categorie";
+        String query = "select designation from categorie";
         PreparedStatement ps = null;
         ps = con.prepareStatement(query);
         ResultSet rs = null;
