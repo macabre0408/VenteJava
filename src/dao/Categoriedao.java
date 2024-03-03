@@ -43,7 +43,36 @@ public class Categoriedao {
         }
         return cat;
     }
-    
+    public static void getOldDesignation(String old) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "update categorie set old_designation = ? where designation = ?";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, old);
+        ps.setString(2, old);
+        ps.executeUpdate();
+    }
+    public static void UpdateCat(String New) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "update categorie set designation = ? where designation = old_designation";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, New);
+        ps.executeUpdate();
+    }
+    public static boolean tryFindCat(String desi) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "select * from categorie where designation = ?";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, desi);
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+        if(rs.next()){
+            return true;
+        }
+        return false;
+    }
         
        
         
