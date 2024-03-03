@@ -59,7 +59,6 @@ public class CategorieFrame extends javax.swing.JFrame {
         jButtonAnnuler = new javax.swing.JButton();
         jButtonFermer = new javax.swing.JButton();
         jButtonModifier = new javax.swing.JButton();
-        jButtonAfficher = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -125,11 +124,9 @@ public class CategorieFrame extends javax.swing.JFrame {
         });
 
         jButtonModifier.setText("Modifier");
-
-        jButtonAfficher.setText("Afficher catégorie");
-        jButtonAfficher.addActionListener(new java.awt.event.ActionListener() {
+        jButtonModifier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAfficherActionPerformed(evt);
+                jButtonModifierActionPerformed(evt);
             }
         });
 
@@ -140,12 +137,10 @@ public class CategorieFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(17, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonAfficher)
-                    .addComponent(jButtonEnregistrer)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButtonAnnuler)
-                        .addComponent(jButtonModifier)
-                        .addComponent(jButtonFermer)))
+                    .addComponent(jButtonFermer)
+                    .addComponent(jButtonAnnuler)
+                    .addComponent(jButtonModifier)
+                    .addComponent(jButtonEnregistrer))
                 .addGap(34, 34, 34))
         );
         jPanel3Layout.setVerticalGroup(
@@ -153,15 +148,13 @@ public class CategorieFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(jButtonEnregistrer)
-                .addGap(27, 27, 27)
-                .addComponent(jButtonAfficher)
-                .addGap(38, 38, 38)
+                .addGap(36, 36, 36)
                 .addComponent(jButtonModifier)
                 .addGap(46, 46, 46)
                 .addComponent(jButtonAnnuler)
-                .addGap(18, 18, 18)
+                .addGap(32, 32, 32)
                 .addComponent(jButtonFermer, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -172,6 +165,11 @@ public class CategorieFrame extends javax.swing.JFrame {
 
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -188,11 +186,11 @@ public class CategorieFrame extends javax.swing.JFrame {
                         .addGap(16, 16, 16)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addGap(71, 71, 71)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(17, 17, 17))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,7 +198,7 @@ public class CategorieFrame extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addGap(38, 38, 38)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -250,7 +248,8 @@ public class CategorieFrame extends javax.swing.JFrame {
         }
         else{
             try {
-                Categoriedao.saveCat(jTextFieldDesignation.getText());
+                if(!Categoriedao.tryFindCat(jTextFieldDesignation.getText())){
+                    Categoriedao.saveCat(jTextFieldDesignation.getText());
                 JOptionPane.showMessageDialog(rootPane, "Enregistrement effectué avec succès ", "Success", JOptionPane.INFORMATION_MESSAGE);
                 DefaultTableModel tab1 = (DefaultTableModel)jTable1.getModel();
                 List<Categorie> cat = new ArrayList<>();
@@ -259,7 +258,11 @@ public class CategorieFrame extends javax.swing.JFrame {
                 for(Categorie c : cat){
                 String[] data = {c.getDesignation()};
                 tab1.addRow(data);
+                }
             }
+                else{
+                    JOptionPane.showMessageDialog(rootPane, "La catégorie " + jTextFieldDesignation.getText()+ " existe déjà");
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(CategorieFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -288,12 +291,37 @@ public class CategorieFrame extends javax.swing.JFrame {
         form.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jButtonAfficherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAfficherActionPerformed
+    private void jButtonModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModifierActionPerformed
         // TODO add your handling code here:
-        
-        
-        
-    }//GEN-LAST:event_jButtonAfficherActionPerformed
+        String New = jTextFieldDesignation.getText();
+        if(!New.isEmpty()){
+        DefaultTableModel tb = (DefaultTableModel)jTable1.getModel();
+        if(jTable1.getSelectedRowCount()==1){
+            tb.setValueAt(New, jTable1.getSelectedRow(), 0);
+        }
+        if(jTable1.getSelectedRowCount()==0){
+            JOptionPane.showMessageDialog(rootPane, "aucune ligne n'a été sélectionnée");
+        }
+        try {
+            Categoriedao.UpdateCat(New);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategorieFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }}
+        else{
+            JOptionPane.showMessageDialog(rootPane, "Veuillez renseignez la valeur du champ à modifier");
+        }
+    }//GEN-LAST:event_jButtonModifierActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel tb = (DefaultTableModel)jTable1.getModel();
+       jTextFieldDesignation.setText((String)(tb.getValueAt(jTable1.getSelectedRow(), 0)));
+        try {
+            Categoriedao.getOldDesignation(jTextFieldDesignation.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(CategorieFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -338,7 +366,6 @@ public class CategorieFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAfficher;
     private javax.swing.JButton jButtonAnnuler;
     private javax.swing.JButton jButtonEnregistrer;
     private javax.swing.JButton jButtonFermer;
