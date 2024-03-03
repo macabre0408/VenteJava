@@ -3,9 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
+import entities.Categorie;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author dell
@@ -22,6 +27,21 @@ public class Categoriedao {
         ps.setString(1, laDesignation);
         ps.executeUpdate();
         
+    }
+    public static List<Categorie> ShowCat() throws SQLException{
+        List<Categorie> cat = new ArrayList<>();
+        Connection con = Connexion.Connect();
+        String query = "select * from categorie";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+        while(rs.next()){
+            Categorie c = new Categorie();
+            c.setDesignation(rs.getString("designation"));
+            cat.add(c);
+        }
+        return cat;
     }
     
         
