@@ -73,10 +73,29 @@ public class Categoriedao {
         }
         return false;
     }
-        
-       
-        
-        
-        
-    
+    public static List<Categorie> SearchCat(String search) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "select designation from categorie where designation like ? or designation like ? or designation like ? ";
+        List<Categorie> cat = new ArrayList<>();
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, "%"+search+"%");
+        ps.setString(2, search+"%");
+        ps.setString(3, "%"+search);
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+        while(rs.next()){
+            Categorie c = new Categorie();
+            c.setDesignation(rs.getString("designation"));
+            cat.add(c);
+        }
+        return cat;
+    }    
+    public static void main(String[] args) throws SQLException{
+        List<Categorie> cat = new ArrayList<>();
+        cat = SearchCat("o");
+        for(Categorie c:cat){
+            System.out.println(c.getDesignation());
+        }
+    }
 }
