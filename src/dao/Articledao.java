@@ -9,11 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 /**
  *
  * @author dell
@@ -41,28 +43,73 @@ public class Articledao {
         }
         return art;
          }
-    public static void addArticle(String libelle, String prix, String quantite_en_stock, String date_creation, String quantite_seuille, String designation) throws SQLException{
-        Connection con = Connexion.Connect();
-        String query0 = "select id from categorie where designation = ?";
-        String query = "insert into article(libelle, prix, quantite_en_stock, date_creation, quantite_seuille, id_cat ) values(?, ?, ?, ?, ?, ?);";
-        PreparedStatement ps, ps1 = null;
+public static void addArticle(String libelle, String prix, String quantite_en_stock, String date_creation, String quantite_seuille, String designation) {
+    Connection con = null;
+    PreparedStatement ps = null;
+    PreparedStatement ps1 = null;
+    ResultSet rs = null;
+    
+    try {
+        con = Connexion.Connect();
+        
+        // Requête pour obtenir l'ID de la catégorie
+        String query0 = "SELECT id FROM categorie WHERE designation = ?";
         ps1 = con.prepareStatement(query0);
         ps1.setString(1, designation);
-        ResultSet rs = null;
         rs = ps1.executeQuery();
+        String[] a = date_creation.split("-");
+        int year = Integer.parseInt(a[0]);
+            int month = Integer.parseInt(a[1]);
+            int day = Integer.parseInt(a[2]);
+
+            // Vérifier la validité de la date en utilisant LocalDate
+            LocalDate date = LocalDate.of(year, month, day);
         
-        if(rs.next()){
-        ps = con.prepareStatement(query);
-        ps.setString(1, libelle);
-        ps.setDouble(2, Double.parseDouble(prix));
-        ps.setInt(3, Integer.parseInt(quantite_en_stock));
-        ps.setString(4, date_creation);
-        ps.setInt(5, Integer.parseInt(quantite_seuille));
-        ps.setInt(6, rs.getInt("id"));
-        ps.executeUpdate();
+        if (rs.next()) {
+            // Requête pour insérer l'article
+            String query = "INSERT INTO article(libelle, prix, quantite_en_stock, date_creation, quantite_seuille, id_cat) VALUES (?, ?, ?, ?, ?, ?)";
+            ps = con.prepareStatement(query);
+            ps.setString(1, libelle);
+            ps.setDouble(2, Double.parseDouble(prix));
+            ps.setInt(3, Integer.parseInt(quantite_en_stock));
+            ps.setString(4, date_creation);
+            ps.setInt(5, Integer.parseInt(quantite_seuille));
+            ps.setInt(6, rs.getInt("id"));
+            ps.executeUpdate();
+            
+            // Afficher un message de succès à l'utilisateur
+            JOptionPane.showMessageDialog(null, "Article enrégistré avec succès");
+        } 
+    } catch (SQLException e) {
+        // Afficher un message d'erreur à l'utilisateur
+        JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'ajout de l'article.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace(); // Imprime la trace de la pile pour le débogage
+    } catch (NumberFormatException e) {
+        // Gérer le cas où la conversion de chaîne en nombre échoue
+        JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques valides pour le prix, la quantité en stock,la quantité seuille et la date", "Erreur", JOptionPane.ERROR_MESSAGE);
+    } catch (DateTimeException e) {
+            JOptionPane.showMessageDialog(null, "Veuillez entrer une date valide", "date", JOptionPane.ERROR_MESSAGE);
+        }
+    finally {
+        // Fermer les ressources (PreparedStatement, ResultSet, Connection)
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps1 != null) {
+                ps1.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Imprime la trace de la pile pour le débogage
         }
     }
-    public static void main(String[] args){
+}    public static void main(String[] args){
             List<Article> art = new ArrayList<>();
         try {
             art = showArticle();
