@@ -91,11 +91,6 @@ public class Categoriedao {
         }
         return cat;
     }    
-    public static void main(String[] args) throws SQLException{
-        List<Categorie> cat = new ArrayList<>();
-        cat = SearchCat("o");
-        for(Categorie c:cat){
-            System.out.println(c.getDesignation());
-        }
+   
     }
 }
