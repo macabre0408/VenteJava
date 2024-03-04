@@ -4,9 +4,12 @@
  */
 package vente;
 
+import dao.Articledao;
 import dao.Categoriedao;
 import entities.Categorie;
+import entities.ExceptionMine;
 import java.sql.SQLException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -354,6 +357,16 @@ public class ArticleFrame extends javax.swing.JFrame {
 
     private void jButtonAddArticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddArticleActionPerformed
         // TODO add your handling code here:
+        if(jTextFieldLibelle.getText().isEmpty() || jTextFieldDate_creation.getText().isEmpty() || jTextFieldPrix.getText().isEmpty() || jTextFieldQuantite_en_stock.getText().isEmpty() || jTextFieldQauntite_seuille.getText().isEmpty()){
+            JOptionPane.showMessageDialog(rootPane, "Veuillez remplir tous les champs");
+        }
+        else{
+            if(jTextFieldDate_creation.getText().split("-").length != 3){
+                JOptionPane.showMessageDialog(rootPane, "Veuillez entrer le champ date sous le format 'AAAA-MM-JJ'");
+            }           
+            Articledao.addArticle(jTextFieldLibelle.getText(), jTextFieldPrix.getText(), jTextFieldQuantite_en_stock.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText(), String.valueOf(jComboBox1.getSelectedItem()));
+            }
+        
     }//GEN-LAST:event_jButtonAddArticleActionPerformed
 
     /**
