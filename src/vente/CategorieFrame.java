@@ -313,22 +313,33 @@ public class CategorieFrame extends javax.swing.JFrame {
     private void jButtonModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModifierActionPerformed
         // TODO add your handling code here:
         String New = jTextFieldDesignation.getText();
-        if(!New.isEmpty()){
-        DefaultTableModel tb = (DefaultTableModel)jTable1.getModel();
+        try {
+            boolean exist = Categoriedao.tryFindCat(New);
+             DefaultTableModel tb = (DefaultTableModel)jTable1.getModel();
+        if(exist==false){
         if(jTable1.getSelectedRowCount()==1){
             tb.setValueAt(New, jTable1.getSelectedRow(), 0);
-        }
-        if(jTable1.getSelectedRowCount()==0){
-            JOptionPane.showMessageDialog(rootPane, "aucune ligne n'a été sélectionnée");
-        }
-        try {
-            Categoriedao.UpdateCat(New);
+            if(!New.isEmpty()){
+                  try {
+                        Categoriedao.UpdateCat(New);
+                        JOptionPane.showMessageDialog(rootPane, "Modification enrégistrée avec succès");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CategorieFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }  
+            }          
+        }}else{
+       JOptionPane.showMessageDialog(rootPane, "Conflit de désignation "+ New+" existe déjà", "Error name", JOptionPane.ERROR_MESSAGE);
+       }
         } catch (SQLException ex) {
             Logger.getLogger(CategorieFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }}
-        else{
-            JOptionPane.showMessageDialog(rootPane, "Veuillez renseignez la valeur du champ à modifier");
         }
+       
+        if(jTable1.getSelectedRowCount()==0){
+            JOptionPane.showMessageDialog(rootPane, "aucune ligne n'a été sélectionnée");
+        
+           
+}
+       
     }//GEN-LAST:event_jButtonModifierActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
