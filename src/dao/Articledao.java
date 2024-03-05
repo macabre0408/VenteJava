@@ -109,15 +109,78 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
             e.printStackTrace(); // Imprime la trace de la pile pour le débogage
         }
     }
-}    public static void main(String[] args){
+    
+}
+    public static void OldArticle(String old) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "update article set old_libelle = ? where libelle= ? ";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, old);
+        ps.setString(2, old);
+        ps.executeUpdate();
+    }
+    public static void UpdateArticle(String libelle, String designation, String prix, String date_creation, String quantite_seuille) throws SQLException{
+        try{
+        String[] a = date_creation.split("-");
+        int year = Integer.parseInt(a[0]);
+            int month = Integer.parseInt(a[1]);
+            int day = Integer.parseInt(a[2]);
+
+            // Vérifier la validité de la date en utilisant LocalDate
+            LocalDate date = LocalDate.of(year, month, day);
+        
+        Connection con = Connexion.Connect();
+        String query0 = "select id from categorie where designation = ?";
+        String query = "update article set libelle = ?, id_cat=?, prix=?, date_creation=? ,quantite_seuille = ?  where libelle=old_libelle ";
+        PreparedStatement ps, ps1 = null;
+        ps1 = con.prepareStatement(query0);
+        ps1.setString(1, designation);
+        ResultSet rs = null;
+        rs = ps1.executeQuery();
+        
+        if(rs.next()){
+            ps = con.prepareStatement(query);
+        ps.setString(1, libelle);
+        ps.setInt(2, rs.getInt("id"));
+        ps.setDouble(3, Double.parseDouble(prix));
+        ps.setString(4, date_creation);
+        ps.setInt(5, Integer.parseInt(quantite_seuille));
+        ps.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Article modifiée avec succès");
+        }
+        } catch (SQLException e) {
+        // Afficher un message d'erreur à l'utilisateur
+        JOptionPane.showMessageDialog(null, "Une erreur est survenue lors de l'ajout de l'article.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace(); // Imprime la trace de la pile pour le débogage
+    } catch (NumberFormatException e) {
+        // Gérer le cas où la conversion de chaîne en nombre échoue
+        JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques valides pour le prix, la quantité en stock,la quantité seuille et la date", "Erreur", JOptionPane.ERROR_MESSAGE);
+    } catch (DateTimeException e) {
+            JOptionPane.showMessageDialog(null, "Veuillez entrer une date valide", "date", JOptionPane.ERROR_MESSAGE);
+        }
+}
+    public static boolean TryFindArt(String libe) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query = "select libelle from article where libelle = ? ";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ps.setString(1, libe);
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+        if(rs.next()){
+            return true;
+        }
+        return false;
+    }
+    public static void main(String[] args){
             List<Article> art = new ArrayList<>();
         try {
-            art = showArticle();
-            addArticle("Mac", "50", "4", "2024-03-04", "3", "Informatique"); 
+            OldArticle("Macintosh");
+            UpdateArticle("Mac Book Pro", "Informatiques", "150000", "2024-03-04", "25");
         } catch (SQLException ex) {
             Logger.getLogger(Articledao.class.getName()).log(Level.SEVERE, null, ex);
         }
-            System.out.println(art.get(0).getDate_creation());
                     
         }
 }
