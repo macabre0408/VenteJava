@@ -43,6 +43,28 @@ public class Articledao {
         }
         return art;
          }
+    public static List<Article> showOneArticle() throws SQLException{
+        Connection con = Connexion.Connect();
+        List<Article> art = new ArrayList<>();
+        String query = "select libelle, designation, prix, quantite_en_stock, date_creation, quantite_seuille "
+                + "from article inner join categorie on article.id_cat = categorie.id where article.id >=all(select id from article)";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ResultSet rs;
+        rs  = ps.executeQuery();
+        while(rs.next()){
+            Article a = new Article();
+            a.setLibelle(rs.getString("libelle"));
+            a.setDesignation(rs.getString("designation"));
+            a.setPrix(rs.getDouble("prix"));
+            a.setQuantite_en_stock(rs.getInt("quantite_en_stock"));
+            String dat = String.valueOf(rs.getDate("date_creation"));
+            a.setDate_creation(LocalDate.parse(dat));
+            a.setQuantite_seuille(rs.getInt("quantite_seuille"));
+            art.add(a);
+        }
+        return art;
+         }
 public static void addArticle(String libelle, String prix, String quantite_en_stock, String date_creation, String quantite_seuille, String designation) {
     Connection con = null;
     PreparedStatement ps = null;
@@ -64,7 +86,10 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
 
             // Vérifier la validité de la date en utilisant LocalDate
             LocalDate date = LocalDate.of(year, month, day);
-        
+        if(Double.parseDouble(prix) < 0 || Integer.parseInt(quantite_en_stock) < 0 || Integer.parseInt(quantite_seuille)<0){
+                JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques positives pour le prix et la quantité seuille", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         if (rs.next()) {
             // Requête pour insérer l'article
             String query = "INSERT INTO article(libelle, prix, quantite_en_stock, date_creation, quantite_seuille, id_cat) VALUES (?, ?, ?, ?, ?, ?)";
@@ -138,6 +163,10 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
         ps1.setString(1, designation);
         ResultSet rs = null;
         rs = ps1.executeQuery();
+        if (Integer.parseInt(quantite_seuille)<0 || Double.parseDouble(prix) < 0){
+                JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques positives pour le prix et la quantité seuille", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         
         if(rs.next()){
             ps = con.prepareStatement(query);
@@ -162,7 +191,7 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
 }
     public static boolean TryFindArt(String libe) throws SQLException{
         Connection con = Connexion.Connect();
-        String query = "select libelle from article where libelle = ? ";
+        String query = "select libelle from article where libelle = ? and libelle <> old_libelle ";
         PreparedStatement ps = null;
         ps = con.prepareStatement(query);
         ps.setString(1, libe);
@@ -173,6 +202,43 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
         }
         return false;
     }
+    public static void DeleteArticle(String libelle) throws SQLException{
+        Connection con = Connexion.Connect();
+        String query ="delete from article where libelle = ?";
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setString(1,libelle);
+        ps.executeUpdate();
+    }
+    public static void AppArticle(String libelle,String quantite_en_stock, String quantite_app) throws SQLException{
+        try{
+        Connection con = Connexion.Connect();
+        PreparedStatement ps = con.prepareStatement("update article set quantite_en_stock = ? where libelle =?");
+        PreparedStatement ps1 = con.prepareStatement("insert into app(id_art, quantite_app, date_app) values(?,?,?)");
+        PreparedStatement ps2 = con.prepareStatement("select id from article where libelle = ?");
+         if(Integer.parseInt(quantite_app) < 0){
+                JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques positives pour la quantité en stock", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        ps.setInt(1, Integer.parseInt(quantite_en_stock) + Integer.parseInt(quantite_app));
+        ps.setString(2, libelle);
+        ps.executeUpdate();
+        ps2.setString(1, libelle);
+        ResultSet rs = ps2.executeQuery();
+       
+        if(rs.next()){
+            ps1.setInt(1, rs.getInt("id"));
+            ps1.setInt(2, Integer.parseInt(quantite_app));
+           ps1.setString(3, String.valueOf(LocalDate.now()));
+           ps1.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Approvisionnement réussi");
+
+        }
+        }catch (NumberFormatException e) {
+        // Gérer le cas où la conversion de chaîne en nombre échoue
+        JOptionPane.showMessageDialog(null, "Veuillez entrer des valeurs numériques valides la quantité d", "Erreur", JOptionPane.ERROR_MESSAGE);
+    } 
+        
+     }
     public static void main(String[] args){
             List<Article> art = new ArrayList<>();
         try {
