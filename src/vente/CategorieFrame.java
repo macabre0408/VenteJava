@@ -269,15 +269,16 @@ public class CategorieFrame extends javax.swing.JFrame {
             try {
                 if(!Categoriedao.tryFindCat(jTextFieldDesignation.getText())){
                     Categoriedao.saveCat(jTextFieldDesignation.getText());
-                JOptionPane.showMessageDialog(rootPane, "Enregistrement effectué avec succès ", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Enregistrement effectué", "Success", JOptionPane.INFORMATION_MESSAGE);
                 DefaultTableModel tab1 = (DefaultTableModel)jTable1.getModel();
                 List<Categorie> cat = new ArrayList<>();
-                tab1.setRowCount(0);
-                cat = Categoriedao.ShowCat();
+                cat = Categoriedao.ShowOneCat();
                 for(Categorie c : cat){
                 String[] data = {c.getDesignation()};
                 tab1.addRow(data);
                 }
+                jTextFieldDesignation.setText("");
+                jTextFieldDesignation.requestFocus();
             }
                 else{
                     JOptionPane.showMessageDialog(rootPane, "La catégorie " + jTextFieldDesignation.getText()+ " existe déjà");
