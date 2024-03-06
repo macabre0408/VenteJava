@@ -43,6 +43,21 @@ public class Categoriedao {
         }
         return cat;
     }
+    public static List<Categorie> ShowOneCat() throws SQLException{
+        List<Categorie> cat = new ArrayList<>();
+        Connection con = Connexion.Connect();
+        String query = "select designation from categorie where id >= all(select id from categorie)";
+        PreparedStatement ps = null;
+        ps = con.prepareStatement(query);
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+        while(rs.next()){
+            Categorie c = new Categorie();
+            c.setDesignation(rs.getString("designation"));
+            cat.add(c);
+        }
+        return cat;
+    }
     public static void getOldDesignation(String old) throws SQLException{
         Connection con = Connexion.Connect();
         String query = "update categorie set old_designation = ? where designation = ?";
