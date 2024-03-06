@@ -30,6 +30,7 @@ public class ArticleFrame extends javax.swing.JFrame {
      */
     public ArticleFrame() {
         initComponents();
+        jButtonApp.setEnabled(false);
         jTextFieldDate_creation.setText(String.valueOf(LocalDate.now()));
         jTextFieldQuantite_en_stock.setText("0");
         jTextFieldQuantite_en_stock.setEnabled(false);
@@ -104,10 +105,13 @@ public class ArticleFrame extends javax.swing.JFrame {
         jButtonAddArticle = new javax.swing.JButton();
         jButtonModifier = new javax.swing.JButton();
         jButtonAnnuler = new javax.swing.JButton();
-        jButtonSupprimer = new javax.swing.JButton();
+        jButtonSupprimer1 = new javax.swing.JButton();
         jButtonFermer = new javax.swing.JButton();
+        jButtonOn = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jTextFieldPrix = new javax.swing.JTextField();
+        jTextFieldSearch = new javax.swing.JTextField();
+        jButtonRechercher = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -139,15 +143,43 @@ public class ArticleFrame extends javax.swing.JFrame {
 
         jLabel6.setText("Quantité Seuille");
 
+        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBox1MouseClicked(evt);
+            }
+        });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
 
+        jTextFieldLibelle.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldLibelleMouseClicked(evt);
+            }
+        });
         jTextFieldLibelle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldLibelleActionPerformed(evt);
+            }
+        });
+
+        jTextFieldQuantite_en_stock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldQuantite_en_stockMouseClicked(evt);
+            }
+        });
+
+        jTextFieldDate_creation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldDate_creationMouseClicked(evt);
+            }
+        });
+
+        jTextFieldQauntite_seuille.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldQauntite_seuilleMouseClicked(evt);
             }
         });
 
@@ -167,6 +199,11 @@ public class ArticleFrame extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         jButtonApp.setText("Approvisionner");
+        jButtonApp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAppActionPerformed(evt);
+            }
+        });
 
         jButtonAddArticle.setText("Ajouter un Article");
         jButtonAddArticle.addActionListener(new java.awt.event.ActionListener() {
@@ -189,7 +226,12 @@ public class ArticleFrame extends javax.swing.JFrame {
             }
         });
 
-        jButtonSupprimer.setText("Supprimer");
+        jButtonSupprimer1.setText("Supprimer");
+        jButtonSupprimer1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSupprimer1ActionPerformed(evt);
+            }
+        });
 
         jButtonFermer.setText("Fermer");
         jButtonFermer.addActionListener(new java.awt.event.ActionListener() {
@@ -198,20 +240,33 @@ public class ArticleFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonOn.setText("OFF");
+        jButtonOn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonModifier)
-                    .addComponent(jButtonAddArticle)
-                    .addComponent(jButtonSupprimer)
-                    .addComponent(jButtonAnnuler)
-                    .addComponent(jButtonFermer)
-                    .addComponent(jButtonApp))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonModifier)
+                            .addComponent(jButtonAddArticle)
+                            .addComponent(jButtonSupprimer1)
+                            .addComponent(jButtonAnnuler)
+                            .addComponent(jButtonFermer)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jButtonOn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonApp)))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,9 +276,11 @@ public class ArticleFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButtonModifier)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonApp)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonApp)
+                    .addComponent(jButtonOn))
                 .addGap(18, 18, 18)
-                .addComponent(jButtonSupprimer)
+                .addComponent(jButtonSupprimer1)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonAnnuler)
                 .addGap(18, 18, 18)
@@ -232,6 +289,19 @@ public class ArticleFrame extends javax.swing.JFrame {
         );
 
         jLabel7.setText("Prix");
+
+        jTextFieldPrix.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldPrixMouseClicked(evt);
+            }
+        });
+
+        jButtonRechercher.setText("Rechercher");
+        jButtonRechercher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRechercherActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -263,7 +333,12 @@ public class ArticleFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTextFieldQauntite_seuille, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(69, 69, 69)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(jButtonRechercher)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -271,17 +346,24 @@ public class ArticleFrame extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextFieldLibelle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldLibelle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonRechercher))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(jTextFieldPrix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -293,14 +375,15 @@ public class ArticleFrame extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jTextFieldDate_creation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldQauntite_seuille, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(447, 447, 447))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldQauntite_seuille, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(451, 451, 451))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -400,15 +483,49 @@ public class ArticleFrame extends javax.swing.JFrame {
 
     private void jButtonAddArticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddArticleActionPerformed
         // TODO add your handling code here:
+        List<Article> art = new ArrayList<>();
+        DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
         if(jTextFieldLibelle.getText().isEmpty() || jTextFieldDate_creation.getText().isEmpty() || jTextFieldPrix.getText().isEmpty() || jTextFieldQuantite_en_stock.getText().isEmpty() || jTextFieldQauntite_seuille.getText().isEmpty()){
             JOptionPane.showMessageDialog(rootPane, "Veuillez remplir tous les champs");
         }
         else{
             if(jTextFieldDate_creation.getText().split("-").length != 3){
                 JOptionPane.showMessageDialog(rootPane, "Veuillez entrer le champ date sous le format 'AAAA-MM-JJ'");
-            }           
-            Articledao.addArticle(jTextFieldLibelle.getText(), jTextFieldPrix.getText(), jTextFieldQuantite_en_stock.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText(), String.valueOf(jComboBox1.getSelectedItem()));
             }
+            else{
+                try {
+                    boolean exist;
+                    exist = Articledao.TryFindArt(jTextFieldLibelle.getText());
+                    if(exist==false){
+                        Articledao.addArticle(jTextFieldLibelle.getText(), jTextFieldPrix.getText(), jTextFieldQuantite_en_stock.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText(), String.valueOf(jComboBox1.getSelectedItem()));
+                        try {
+                            art = Articledao.showOneArticle();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextFieldQuantite_en_stock.getText()) == 0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) > 0) && !String.valueOf(tb.getValueAt(jTable2.getRowCount()-1, 0)).equals(art.get(0).getLibelle())) {
+    // Votre code ici
+
+                        for(Article a:art){
+                            String[] data = {
+                                a.getLibelle(),
+                                a.getDesignation(),
+                                String.valueOf(a.getPrix()),
+                                String.valueOf(a.getQuantite_en_stock()),
+                                String.valueOf(a.getDate_creation()),
+                                String.valueOf(a.getQuantite_seuille())
+                            };
+                            tb.addRow(data);
+                            jTable1.setDefaultEditor(Object.class, null);
+                        }}}else{
+                        JOptionPane.showMessageDialog(rootPane, "L'article existe déjà", "error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        }
         
     }//GEN-LAST:event_jButtonAddArticleActionPerformed
 
@@ -428,12 +545,15 @@ public class ArticleFrame extends javax.swing.JFrame {
                  try {
                      exist = Articledao.TryFindArt(jTextFieldLibelle.getText());
                      if(exist==false){
+                        if(Double.parseDouble(jTextFieldPrix.getText())>0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) >0){
                       tb.setValueAt(jTextFieldDate_creation.getText() ,jTable2.getSelectedRow(), 4);
+                        
         tb.setValueAt(jTextFieldLibelle.getText(), jTable2.getSelectedRow(), 0);
         tb.setValueAt(jComboBox1.getSelectedItem(), jTable2.getSelectedRow(), 1);
         tb.setValueAt(jTextFieldPrix.getText(),jTable2.getSelectedRow(), 2);
         tb.setValueAt(jTextFieldQuantite_en_stock.getText(),jTable2.getSelectedRow(), 3);
         tb.setValueAt(jTextFieldQauntite_seuille.getText(),jTable2.getSelectedRow(), 5);
+                        }
                      Articledao.UpdateArticle(jTextFieldLibelle.getText(), String.valueOf(jComboBox1.getSelectedItem()), jTextFieldPrix.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText());
                  }
                      else{
@@ -447,6 +567,8 @@ public class ArticleFrame extends javax.swing.JFrame {
         }
             }if(jTable2.getSelectedRowCount()==0){
             JOptionPane.showMessageDialog(rootPane, "Aucune ligne n'a été sélectionnée");
+        }if(jTable2.getSelectedRowCount()>1){
+                       JOptionPane.showMessageDialog(rootPane, "Plusieurs lignes ont été sélectionnée");
         }
        
         
@@ -470,6 +592,156 @@ public class ArticleFrame extends javax.swing.JFrame {
             Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButtonAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAppActionPerformed
+        // TODO add your handling code here:
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+         String quantite_en_stock = String.valueOf(tb.getValueAt(jTable2.getSelectedRow(), 3));
+        if(jTable2.getSelectedRowCount()==1){
+                if(jTextFieldQuantite_en_stock.getText().isEmpty()){
+            JOptionPane.showMessageDialog(rootPane, "Veuillez remplir le champ Quantité en Stock");
+        }
+        else{
+                    try {
+                        Articledao.AppArticle(jTextFieldLibelle.getText(), quantite_en_stock, jTextFieldQuantite_en_stock.getText());
+                        if(Integer.parseInt(jTextFieldQuantite_en_stock.getText())>0){
+                        tb.setValueAt(String.valueOf(Integer.parseInt(quantite_en_stock)+Integer.parseInt(jTextFieldQuantite_en_stock.getText()) ) ,jTable2.getSelectedRow(), 3);
+                        }
+                        jButtonOn.setText("OFF");
+                        jTextFieldQuantite_en_stock.setEnabled(false);
+        jTextFieldDate_creation.setEnabled(true);
+        jTextFieldLibelle.setEnabled(true);
+        jTextFieldPrix.setEnabled(true);
+        jTextFieldQauntite_seuille.setEnabled(true);
+        jButtonAddArticle.setEnabled(true);
+        jButtonSupprimer1.setEnabled(true);
+        jButtonModifier.setEnabled(true);
+        jComboBox1.setEnabled(true);
+        jButtonApp.setEnabled(false);
+        jLabel4.setText("Quantité en stock");
+        jTextFieldQuantite_en_stock.setText(String.valueOf(tb.getValueAt(jTable2.getSelectedRow(), 3)));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 }
+            }if(jTable2.getSelectedRowCount()==0){
+            JOptionPane.showMessageDialog(rootPane, "Aucune ligne n'a été sélectionnée");
+        }if(jTable2.getSelectedRowCount()>1){
+                       JOptionPane.showMessageDialog(rootPane, "Plusieurs lignes ont été sélectionnée");
+        }
+    }                                             
+    private void jButtonSupprimerActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButtonAppActionPerformed
+
+    private void jButtonSupprimer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSupprimer1ActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+            try {
+                boolean exist;
+                exist = Articledao.TryFindArt(jTextFieldLibelle.getText());
+                if(exist == true){
+                    int c =JOptionPane.showConfirmDialog(rootPane, "Voulez-vous vraiment supprimer cet article", "DELETE", JOptionPane.YES_NO_OPTION);
+                    if(c==0){
+                    Articledao.DeleteArticle(jTextFieldLibelle.getText());
+                    tb.removeRow(jTable2.getSelectedRow());
+                    JOptionPane.showMessageDialog(rootPane, "Article supprimé");
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(rootPane, "L'article "+jTextFieldLibelle.getText()+" n'existe pas" , "No find", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            if(jTable2.getSelectedRowCount()==0){
+            JOptionPane.showMessageDialog(rootPane, "Aucune ligne n'a été sélectionnée", "No row", JOptionPane.ERROR_MESSAGE);
+        }
+        if(jTable2.getSelectedRowCount()>1){
+                       JOptionPane.showMessageDialog(rootPane, "Plusieurs lignes ont été sélectionnée");
+        }
+        }
+    
+       
+    }//GEN-LAST:event_jButtonSupprimer1ActionPerformed
+
+    private void jTextFieldLibelleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldLibelleMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jTextFieldLibelleMouseClicked
+
+    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
+        // TODO add your handling code here:
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jComboBox1MouseClicked
+
+    private void jTextFieldPrixMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldPrixMouseClicked
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldPrixMouseClicked
+
+    private void jTextFieldQuantite_en_stockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldQuantite_en_stockMouseClicked
+        // TODO add your handling code here:
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jTextFieldQuantite_en_stockMouseClicked
+
+    private void jTextFieldDate_creationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldDate_creationMouseClicked
+        // TODO add your handling code here:
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jTextFieldDate_creationMouseClicked
+
+    private void jTextFieldQauntite_seuilleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldQauntite_seuilleMouseClicked
+        // TODO add your handling code here:
+         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonSupprimer1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jTextFieldQauntite_seuilleMouseClicked
+
+    private void jButtonOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOnActionPerformed
+        // TODO add your handling code here
+        DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        if(jTable2.getSelectedRowCount()==1){
+        jButtonOn.setText("ON");
+        jButtonAddArticle.setEnabled(false);
+        jButtonSupprimer1.setEnabled(false);
+        jButtonModifier.setEnabled(false);
+        jTextFieldQuantite_en_stock.setEnabled(true);
+        jTextFieldDate_creation.setEnabled(false);
+        jTextFieldLibelle.setEnabled(false);
+        jTextFieldPrix.setEnabled(false);
+        jTextFieldQauntite_seuille.setEnabled(false);
+        jComboBox1.setEnabled(false);
+        jButtonApp.setEnabled(true);
+        jLabel4.setText("Quantité d'approvisionnement");
+        jTextFieldQuantite_en_stock.setText("0");
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Aucune ligne n'a été sélectionnée", "No row", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonOnActionPerformed
+
+    private void jButtonRechercherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRechercherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRechercherActionPerformed
 
     /**
      * @param args the command line arguments
@@ -513,7 +785,9 @@ public class ArticleFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonApp;
     private javax.swing.JButton jButtonFermer;
     private javax.swing.JButton jButtonModifier;
-    private javax.swing.JButton jButtonSupprimer;
+    private javax.swing.JButton jButtonOn;
+    private javax.swing.JButton jButtonRechercher;
+    private javax.swing.JButton jButtonSupprimer1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -537,5 +811,6 @@ public class ArticleFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldPrix;
     private javax.swing.JTextField jTextFieldQauntite_seuille;
     private javax.swing.JTextField jTextFieldQuantite_en_stock;
+    private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
 }
