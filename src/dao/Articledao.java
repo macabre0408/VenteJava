@@ -191,7 +191,7 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
 }
     public static boolean TryFindArt(String libe) throws SQLException{
         Connection con = Connexion.Connect();
-        String query = "select libelle from article where libelle = ? and libelle <> old_libelle ";
+        String query = "select libelle from article where libelle = ? ";
         PreparedStatement ps = null;
         ps = con.prepareStatement(query);
         ps.setString(1, libe);
@@ -239,14 +239,55 @@ public static void addArticle(String libelle, String prix, String quantite_en_st
     } 
         
      }
-    public static void main(String[] args){
-            List<Article> art = new ArrayList<>();
-        try {
-            OldArticle("Macintosh");
-            UpdateArticle("Mac Book Pro", "Informatiques", "150000", "2024-03-04", "25");
-        } catch (SQLException ex) {
-            Logger.getLogger(Articledao.class.getName()).log(Level.SEVERE, null, ex);
+    public static List<Article> SearchArt(String search) throws SQLException{
+        Connection con = Connexion.Connect();
+        PreparedStatement ps = con.prepareStatement("select libelle, designation, prix, quantite_en_stock, date_creation, quantite_seuille from article inner join categorie on article.id_cat = categorie"
+                + ".id where libelle like ? or libelle like ? or libelle like ?");
+        ps.setString(1, "%"+search+"%");
+        ps.setString(2, "%"+search);
+        ps.setString(3, search+"%");
+        ResultSet rs = ps.executeQuery();
+        List<Article> art = new ArrayList<>();
+        while(rs.next()){
+            Article a = new Article();
+            a.setLibelle(rs.getString("libelle"));
+            a.setDesignation(rs.getString("designation"));
+            a.setPrix(rs.getDouble("prix"));
+            a.setQuantite_en_stock(rs.getInt("quantite_en_stock"));
+            String dat = String.valueOf(rs.getDate("date_creation"));
+            a.setDate_creation(LocalDate.parse(dat));
+            a.setQuantite_seuille(rs.getInt("quantite_seuille"));
+            art.add(a);
         }
+        return art;
+    }
+       public static List<Article> VerifierBeforeUpdate(String s) throws SQLException{
+        Connection con = Connexion.Connect();
+        PreparedStatement ps = con.prepareStatement("select libelle from article where libelle<>?");
+        ps.setString(1,s);
+        ResultSet rs = ps.executeQuery();
+        List<Article> art = new ArrayList<>();
+        while(rs.next()){
+            Article a = new Article();
+            a.setLibelle(rs.getString("libelle"));
+            art.add(a);
+        }
+        return art;
+    }
+       public static int CountArt() throws SQLException{
+           Connection con = Connexion.Connect();
+           PreparedStatement ps = con.prepareStatement("select count(*) as total from article");
+           ResultSet rs = ps.executeQuery();
+           int total=0;
+           while(rs.next()){
+               total = rs.getInt("total");
+           }
+           return total;
+       }
+    public static void main(String[] args) throws SQLException{
+            List<Article> art = new ArrayList<>();
+       art = SearchArt("Pain");
+       System.out.println(art.get(0).getLibelle());
                     
         }
 }
