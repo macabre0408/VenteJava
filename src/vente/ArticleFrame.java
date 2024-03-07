@@ -72,6 +72,16 @@ public class ArticleFrame extends javax.swing.JFrame {
             };
             tb.addRow(data);
         }
+        DefaultTableModel t = (DefaultTableModel)jTable3.getModel();
+        int total = 0;
+        try {
+            total = Articledao.CountArt();
+        } catch (SQLException ex) {
+            Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       t.addColumn("Total");
+       String[] data = {String.valueOf(total)};
+       t.addRow(data);
     }
 
     /**
@@ -112,6 +122,8 @@ public class ArticleFrame extends javax.swing.JFrame {
         jTextFieldPrix = new javax.swing.JTextField();
         jTextFieldSearch = new javax.swing.JTextField();
         jButtonRechercher = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -303,6 +315,16 @@ public class ArticleFrame extends javax.swing.JFrame {
             }
         });
 
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(jTable3);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -339,8 +361,13 @@ public class ArticleFrame extends javax.swing.JFrame {
                         .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
                         .addComponent(jButtonRechercher)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(284, 284, 284)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -363,7 +390,7 @@ public class ArticleFrame extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(jTextFieldPrix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -387,6 +414,8 @@ public class ArticleFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -410,8 +439,8 @@ public class ArticleFrame extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(694, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Fichier");
@@ -476,15 +505,18 @@ public class ArticleFrame extends javax.swing.JFrame {
         jTextFieldLibelle.requestFocus();
         jTextFieldPrix.setText("");
         jTextFieldDate_creation.setText(String.valueOf(j));
-        jTextFieldQuantite_en_stock.setText("");
+        jTextFieldQuantite_en_stock.setText("0");
         jTextFieldQauntite_seuille.setText("");
         jComboBox1.setSelectedIndex(0);
+        jButtonSupprimer1.setEnabled(true);
     }//GEN-LAST:event_jButtonAnnulerActionPerformed
 
     private void jButtonAddArticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddArticleActionPerformed
         // TODO add your handling code here:
         List<Article> art = new ArrayList<>();
+         List<Article> art1 = new ArrayList<>();
         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        DefaultTableModel t = (DefaultTableModel)jTable3.getModel();
         if(jTextFieldLibelle.getText().isEmpty() || jTextFieldDate_creation.getText().isEmpty() || jTextFieldPrix.getText().isEmpty() || jTextFieldQuantite_en_stock.getText().isEmpty() || jTextFieldQauntite_seuille.getText().isEmpty()){
             JOptionPane.showMessageDialog(rootPane, "Veuillez remplir tous les champs");
         }
@@ -497,16 +529,16 @@ public class ArticleFrame extends javax.swing.JFrame {
                     boolean exist;
                     exist = Articledao.TryFindArt(jTextFieldLibelle.getText());
                     if(exist==false){
-                        Articledao.addArticle(jTextFieldLibelle.getText(), jTextFieldPrix.getText(), jTextFieldQuantite_en_stock.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText(), String.valueOf(jComboBox1.getSelectedItem()));
                         try {
+                            art1 = Articledao.showOneArticle();
+                            Articledao.addArticle(jTextFieldLibelle.getText(), jTextFieldPrix.getText(), jTextFieldQuantite_en_stock.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText(), String.valueOf(jComboBox1.getSelectedItem()));
                             art = Articledao.showOneArticle();
                         } catch (SQLException ex) {
                             Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
                         }
-if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextFieldQuantite_en_stock.getText()) == 0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) > 0) && !String.valueOf(tb.getValueAt(jTable2.getRowCount()-1, 0)).equals(art.get(0).getLibelle())) {
-    // Votre code ici
-
-                        for(Article a:art){
+                        if(art1.size()==0){
+                    if(Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextFieldQuantite_en_stock.getText()) == 0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) > 0){
+                             for(Article a:art){
                             String[] data = {
                                 a.getLibelle(),
                                 a.getDesignation(),
@@ -517,10 +549,32 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
                             };
                             tb.addRow(data);
                             jTable1.setDefaultEditor(Object.class, null);
-                        }}}else{
+                            t.setValueAt(String.valueOf(Integer.parseInt((String)t.getValueAt(0, 0))+1),0, 0);
+                        }}
+                        }
+                        if(art1.size()!=0){
+                          if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextFieldQuantite_en_stock.getText()) == 0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) > 0) && !String.valueOf(tb.getValueAt(jTable2.getRowCount()-1, 0)).equals(art.get(0).getLibelle())) {
+                            for(Article a:art){
+                            String[] data = {
+                                a.getLibelle(),
+                                a.getDesignation(),
+                                String.valueOf(a.getPrix()),
+                                String.valueOf(a.getQuantite_en_stock()),
+                                String.valueOf(a.getDate_creation()),
+                                String.valueOf(a.getQuantite_seuille())
+                            };
+                            tb.addRow(data);
+                            jTable1.setDefaultEditor(Object.class, null);
+                            t.setValueAt(String.valueOf(Integer.parseInt((String)t.getValueAt(0, 0))+1),0, 0);                            
+                        }
+                        }
+    // Votre code ici
+
+                       }
+                       
+                } else{
                         JOptionPane.showMessageDialog(rootPane, "L'article existe déjà", "error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (SQLException ex) {
+                    } }catch (SQLException ex) {
                     Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -532,6 +586,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
     private void jButtonModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModifierActionPerformed
         // TODO add your handling code here:
         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        List<Article> art = new ArrayList<>();
         if(jTable2.getSelectedRowCount()==1){
                 if(jTextFieldLibelle.getText().isEmpty() || jTextFieldDate_creation.getText().isEmpty() || jTextFieldPrix.getText().isEmpty() || jTextFieldQauntite_seuille.getText().isEmpty()){
             JOptionPane.showMessageDialog(rootPane, "Veuillez remplir tous les champs");
@@ -541,12 +596,22 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
                 JOptionPane.showMessageDialog(rootPane, "Veuillez entrer le champ date sous le format 'AAAA-MM-JJ'");
             }
              else{
-                 boolean exist;
                  try {
-                     exist = Articledao.TryFindArt(jTextFieldLibelle.getText());
-                     if(exist==false){
-                        if(Double.parseDouble(jTextFieldPrix.getText())>0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) >0){
-                      tb.setValueAt(jTextFieldDate_creation.getText() ,jTable2.getSelectedRow(), 4);
+                     art = Articledao.VerifierBeforeUpdate((String) tb.getValueAt(jTable2.getSelectedRow(), 0));
+                 } catch (SQLException ex) {
+                     Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                 try {
+                         int o=0;
+                         for(Article a:art){
+                             if(a.getLibelle().equals(jTextFieldLibelle.getText())){
+                                 o+=1;
+                             }
+                         }
+                        if(Double.parseDouble(jTextFieldPrix.getText())>0 && Integer.parseInt(jTextFieldQauntite_seuille.getText()) >0 && o==0){
+                        Articledao.UpdateArticle(jTextFieldLibelle.getText(), String.valueOf(jComboBox1.getSelectedItem()), jTextFieldPrix.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText());
+
+                            tb.setValueAt(jTextFieldDate_creation.getText() ,jTable2.getSelectedRow(), 4);
                         
         tb.setValueAt(jTextFieldLibelle.getText(), jTable2.getSelectedRow(), 0);
         tb.setValueAt(jComboBox1.getSelectedItem(), jTable2.getSelectedRow(), 1);
@@ -554,8 +619,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
         tb.setValueAt(jTextFieldQuantite_en_stock.getText(),jTable2.getSelectedRow(), 3);
         tb.setValueAt(jTextFieldQauntite_seuille.getText(),jTable2.getSelectedRow(), 5);
                         }
-                     Articledao.UpdateArticle(jTextFieldLibelle.getText(), String.valueOf(jComboBox1.getSelectedItem()), jTextFieldPrix.getText(), jTextFieldDate_creation.getText(), jTextFieldQauntite_seuille.getText());
-                 }
+                 
                      else{
                          JOptionPane.showMessageDialog(rootPane, "Conflit d'article "+jTextFieldLibelle.getText()+" existe déjà", "Duplication", JOptionPane.ERROR_MESSAGE);
                      }
@@ -602,7 +666,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
             JOptionPane.showMessageDialog(rootPane, "Veuillez remplir le champ Quantité en Stock");
         }
         else{
-                    try {
+                    try {          
                         Articledao.AppArticle(jTextFieldLibelle.getText(), quantite_en_stock, jTextFieldQuantite_en_stock.getText());
                         if(Integer.parseInt(jTextFieldQuantite_en_stock.getText())>0){
                         tb.setValueAt(String.valueOf(Integer.parseInt(quantite_en_stock)+Integer.parseInt(jTextFieldQuantite_en_stock.getText()) ) ,jTable2.getSelectedRow(), 3);
@@ -638,6 +702,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
     private void jButtonSupprimer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSupprimer1ActionPerformed
         // TODO add your handling code here:
         DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+        DefaultTableModel t = (DefaultTableModel)jTable3.getModel();
         if(jTable2.getSelectedRowCount()==1){
             try {
                 boolean exist;
@@ -648,6 +713,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
                     Articledao.DeleteArticle(jTextFieldLibelle.getText());
                     tb.removeRow(jTable2.getSelectedRow());
                     JOptionPane.showMessageDialog(rootPane, "Article supprimé");
+                    t.setValueAt(String.valueOf(Integer.parseInt((String)t.getValueAt(0, 0))-1),0, 0);                   
                     }
                 }
                 else{
@@ -675,6 +741,7 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
         if(jTable2.getSelectedRowCount()==1){
         jButtonSupprimer1.setEnabled(false);
         }
+        
     }//GEN-LAST:event_jTextFieldLibelleMouseClicked
 
     private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
@@ -741,6 +808,40 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
 
     private void jButtonRechercherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRechercherActionPerformed
         // TODO add your handling code here:
+        if(jTextFieldSearch.getText().isEmpty()){
+            JOptionPane.showMessageDialog(rootPane, "Veuilllez renseigner le champ désigné pour la recherche", "Void", JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            DefaultTableModel tb = (DefaultTableModel)jTable2.getModel();
+            List<Article> art = new ArrayList<>();
+            try {
+                art = Articledao.SearchArt(jTextFieldSearch.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(ArticleFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int j = 0;
+            if(art.size()!=0){
+                for(Article a:art){
+                   for(int i=0; i<jTable2.getRowCount();i++){
+                     if(a.getLibelle().equals(tb.getValueAt(i, 0))){
+                        String x = "";
+                         for(int z=0; z<jTable2.getColumnCount();z++){
+                          x = String.valueOf(tb.getValueAt(j, z));
+                          tb.setValueAt(String.valueOf(tb.getValueAt(i, z)), j, z);
+                          tb.setValueAt(x, i, z);
+                        }
+                         j++;
+                         break;
+                     }
+                 }
+            }
+            jTable2.setRowSelectionInterval(0, art.size()-1);
+        }else{
+                JOptionPane.showMessageDialog(rootPane, "Article non trouvé");
+            }
+                }
+            
+        
     }//GEN-LAST:event_jButtonRechercherActionPerformed
 
     /**
@@ -804,8 +905,10 @@ if ((Double.parseDouble(jTextFieldPrix.getText()) > 0 && Integer.parseInt(jTextF
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextFieldDate_creation;
     private javax.swing.JTextField jTextFieldLibelle;
     private javax.swing.JTextField jTextFieldPrix;
